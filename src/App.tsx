@@ -111,7 +111,8 @@ export default function App() {
           <img src="https://hoangmaistarschool.edu.vn/thongtin/LogoNSHM.png" alt="Logo Ngôi Sao Hoàng Mai" className="h-[70px] object-contain" />
         </div>
 
-        <h2 className="text-[20px] sm:text-[22px] font-bold mb-6 text-black tracking-tight leading-snug text-center">ĐĂNG KÝ ẢNH FACEID RA-VÀO TRƯỜNG</h2>
+        <h2 className="text-[20px] sm:text-[22px] font-bold mb-1 text-black tracking-tight leading-snug text-center">ĐĂNG KÝ ẢNH FACEID HỌC SINH MỚI</h2>
+        <p className="text-center text-[#c51f27] italic text-[14px] sm:text-[18px] mb-6 font-medium whitespace-nowrap">(Học sinh đã học tại trường không cần nộp lại ảnh thẻ)</p>
 
         {/* Upload Box */}
         <div 
