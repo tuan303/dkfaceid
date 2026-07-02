@@ -25,7 +25,7 @@ export default function App() {
       }
       
       const fileNameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
-      if (!/^26\d{6}$/.test(fileNameWithoutExt)) {
+      if (!/^(26\d{6}|2520\d{4})$/.test(fileNameWithoutExt)) {
         setUploadStatus({ type: 'error', message: 'Tên file không đúng quy định' });
         return;
       }
@@ -200,7 +200,7 @@ export default function App() {
         <div className="text-gray-800 text-[16px] space-y-1.5 mb-8 font-medium">
           <p>- Kích thước tối thiểu 720x1280px</p>
           <p>- Định dạng: JPG, JPEG, PNG</p>
-          <p>- Đặt tên file theo mã học sinh của trường gồm 8 chữ số: 26xxxxxx.</p>
+          <p>- Đặt tên file theo mã học sinh của trường gồm 8 chữ số: 26xxxxxx hoặc 2520xxxx.</p>
           <p>- Đối với học sinh chỉ tham gia trại hè đặt tên file ảnh theo cú pháp: <span className="text-[#c51f27] font-bold">260+mã dự tuyển (5 chữ số)</span>.</p>
         </div>
 
