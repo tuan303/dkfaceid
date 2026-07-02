@@ -7,6 +7,7 @@ import React, { useState, useRef } from 'react';
 
 export default function App() {
   const [file, setFile] = useState<File | null>(null);
+  const [studentId, setStudentId] = useState('');
   const [preview, setPreview] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -21,12 +22,6 @@ export default function App() {
       
       if (!selectedFile.type.startsWith('image/') || !fileExtMatch) {
         setUploadStatus({ type: 'error', message: 'Không đúng định dạng file. Vui lòng chọn ảnh JPG, JPEG hoặc PNG.' });
-        return;
-      }
-      
-      const fileNameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
-      if (!/^(26\d{6}|2520\d{4})$/.test(fileNameWithoutExt)) {
-        setUploadStatus({ type: 'error', message: 'Tên file không đúng quy định' });
         return;
       }
 
@@ -66,14 +61,23 @@ export default function App() {
   const handleUpload = async () => {
     if (!file) return;
 
+    if (!studentId || !/^(26\d{6}|2520\d{4})$/.test(studentId)) {
+      setUploadStatus({ type: 'error', message: 'Tên file ảnh không đúng quy định (26xxxxxx hoặc 260xxxxx hoặc 2520xxxx).' });
+      return;
+    }
+
     setUploading(true);
     setUploadStatus(null);
 
+    const fileExt = file.name.substring(file.name.lastIndexOf('.'));
+    const newFileName = `${studentId}${fileExt}`;
+    const newFile = new File([file], newFileName, { type: file.type });
+
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', newFile);
 
     try {
-      const response = await fetch('/api/upload', {
+      const response = await fetch('/api/submit-photo', {
         method: 'POST',
         body: formData,
       });
@@ -96,7 +100,11 @@ export default function App() {
       setFile(null);
       setPreview(null);
     } catch (error: any) {
-      setUploadStatus({ type: 'error', message: error.message || 'Có lỗi xảy ra khi tải ảnh lên.' });
+      if (error.message === 'Failed to fetch') {
+        setUploadStatus({ type: 'error', message: 'Không thể kết nối đến máy chủ. Vui lòng thử lại hoặc tải lại trang.' });
+      } else {
+        setUploadStatus({ type: 'error', message: error.message || 'Có lỗi xảy ra khi tải ảnh lên.' });
+      }
     } finally {
       setUploading(false);
     }
@@ -140,12 +148,12 @@ export default function App() {
           </div>
           
           {/* Upload Content */}
-          <div className={`relative pt-12 pb-8 px-4 flex flex-col items-center ${isDragging ? 'bg-red-50' : 'bg-white'}`}>
+          <div className={`relative pt-4 pb-4 px-4 flex flex-col items-center ${isDragging ? 'bg-red-50' : 'bg-white'}`}>
             {preview ? (
-              <div className="relative w-full max-w-[200px] aspect-[3/4] mb-5 rounded-lg overflow-hidden border border-gray-200">
+              <div className="relative w-full max-w-[120px] aspect-[3/4] mb-3 rounded-lg overflow-hidden border border-gray-200">
                 <img src={preview} alt="Preview" className="w-full h-full object-cover" />
                 <button 
-                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-700"
+                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-700"
                   onClick={(e) => {
                     e.stopPropagation();
                     setFile(null);
@@ -153,32 +161,32 @@ export default function App() {
                     if (fileInputRef.current) fileInputRef.current.value = '';
                   }}
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
                 </button>
               </div>
             ) : (
               <>
-                <div className="relative mb-5 text-[#c51f27]">
-                  <svg width="60" height="60" viewBox="0 0 24 24" fill="currentColor">
+                <div className="relative mb-3 text-[#c51f27]">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
                      <path d="M4 7C2.89 7 2 7.89 2 9V19C2 20.11 2.89 21 4 21H20C21.11 21 22 20.11 22 19V9C22 7.89 21.11 7 20 7H16.83L15 5H9L7.17 7H4ZM12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17Z" />
                      <circle cx="12" cy="12" r="3.5" fill="white" />
                   </svg>
                   
-                  <div className="absolute -bottom-2 -right-2 bg-white rounded-full p-[3px]">
-                    <div className="bg-[#c51f27] rounded-full p-1 text-white">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-[2px]">
+                    <div className="bg-[#c51f27] rounded-full p-0.5 text-white">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M12 19V5M5 12l7-7 7 7"/>
                       </svg>
                     </div>
                   </div>
                 </div>
                 
-                <p className="text-black font-medium mb-5 text-[16px] text-center">
+                <p className="text-black font-medium mb-3 text-[14px] text-center">
                   {file ? file.name : 'Kéo và thả ảnh hoặc nhấn để chọn'}
                 </p>
                 
                 <button 
-                  className="bg-[#c51f27] text-white px-8 py-2.5 rounded-xl font-semibold text-[15px] hover:bg-red-800 transition-colors shadow-sm"
+                  className="bg-[#c51f27] text-white px-6 py-2 rounded-xl font-semibold text-[14px] hover:bg-red-800 transition-colors shadow-sm"
                   onClick={(e) => {
                     e.stopPropagation();
                     fileInputRef.current?.click();
@@ -191,6 +199,20 @@ export default function App() {
           </div>
         </div>
 
+        <div className="mb-6">
+          <label className="block text-gray-800 text-sm font-bold mb-2 space-y-1">
+            <div>- Đặt tên file theo mã học sinh của trường gồm 8 chữ số: 26xxxxxx hoặc 2520xxxx.</div>
+            <div>- Đối với học sinh chỉ tham gia trại hè đặt tên file ảnh theo cú pháp: <span className="text-[#c51f27] font-bold">260+mã dự tuyển (5 chữ số)</span>.</div>
+          </label>
+          <input
+            type="text"
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-[#c51f27] focus:ring-1 focus:ring-[#c51f27]"
+            placeholder="Ví dụ: 26123456, 26012345, 25201234"
+            value={studentId}
+            onChange={(e) => setStudentId(e.target.value)}
+          />
+        </div>
+
         <h3 className="text-[22px] font-bold mb-4 text-black">Hướng dẫn chụp ảnh</h3>
 
         <div className="mb-6 rounded-lg overflow-hidden border border-gray-200">
@@ -200,8 +222,6 @@ export default function App() {
         <div className="text-gray-800 text-[16px] space-y-1.5 mb-8 font-medium">
           <p>- Kích thước tối thiểu 720x1280px</p>
           <p>- Định dạng: JPG, JPEG, PNG</p>
-          <p>- Đặt tên file theo mã học sinh của trường gồm 8 chữ số: 26xxxxxx hoặc 2520xxxx.</p>
-          <p>- Đối với học sinh chỉ tham gia trại hè đặt tên file ảnh theo cú pháp: <span className="text-[#c51f27] font-bold">260+mã dự tuyển (5 chữ số)</span>.</p>
         </div>
 
         {uploadStatus && (

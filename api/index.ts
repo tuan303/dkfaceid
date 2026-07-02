@@ -10,7 +10,7 @@ const upload = multer({
 });
 
 // API Route to upload file to Google Drive via Google Apps Script
-app.post('/api/upload', (req, res, next) => {
+app.post('/api/submit-photo', (req, res, next) => {
   upload.single('file')(req, res, (err) => {
     if (err instanceof multer.MulterError) {
       if (err.code === 'LIMIT_FILE_SIZE') {
