@@ -111,20 +111,20 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans pb-12">
-      <div className="max-w-md mx-auto px-4 pt-6">
+    <div className="min-h-screen bg-white text-gray-900 font-sans pb-4">
+      <div className="max-w-md mx-auto px-4 pt-4">
         
         {/* Header / Logo */}
-        <div className="flex justify-center mb-8">
-          <img src="https://hoangmaistarschool.edu.vn/thongtin/LogoNSHM.png" alt="Logo Ngôi Sao Hoàng Mai" className="h-[70px] object-contain" />
+        <div className="flex justify-center mb-4">
+          <img src="https://hoangmaistarschool.edu.vn/thongtin/LogoNSHM.png" alt="Logo Ngôi Sao Hoàng Mai" className="h-[50px] object-contain" />
         </div>
 
-        <h2 className="text-[20px] sm:text-[22px] font-bold mb-1 text-black tracking-tight leading-snug text-center">ĐĂNG KÝ ẢNH FACEID HỌC SINH MỚI</h2>
-        <p className="text-center text-[#c51f27] italic text-[14px] sm:text-[18px] mb-6 font-medium whitespace-nowrap">(Học sinh đã học tại trường không cần nộp lại ảnh thẻ)</p>
+        <h2 className="text-[18px] sm:text-[20px] font-bold mb-1 text-black tracking-tight leading-snug text-center">ĐĂNG KÝ ẢNH FACEID HỌC SINH MỚI</h2>
+        <p className="text-center text-[#c51f27] italic text-[12px] sm:text-[14px] mb-4 font-medium whitespace-nowrap">(Học sinh đã học tại trường không cần nộp lại ảnh thẻ)</p>
 
         {/* Upload Box */}
         <div 
-          className={`relative border ${isDragging ? 'border-red-600 bg-red-50' : 'border-[#c51f27]'} rounded-2xl overflow-hidden mb-10 shadow-sm transition-colors cursor-pointer`}
+          className={`relative border ${isDragging ? 'border-red-600 bg-red-50' : 'border-[#c51f27]'} rounded-2xl overflow-hidden mb-4 shadow-sm transition-colors cursor-pointer`}
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
           onDrop={onDrop}
@@ -199,45 +199,68 @@ export default function App() {
           </div>
         </div>
 
-        <div className="mb-6">
-          <label className="block text-gray-800 text-sm font-bold mb-2 space-y-1">
+        <div className="mb-4">
+          <label className="block text-gray-800 text-[14px] font-bold mb-2 space-y-1">
             <div>- Đặt tên file theo mã học sinh của trường gồm 8 chữ số: 26xxxxxx hoặc 2520xxxx.</div>
             <div>- Đối với học sinh chỉ tham gia trại hè đặt tên file ảnh theo cú pháp: <span className="text-[#c51f27] font-bold">260+mã dự tuyển (5 chữ số)</span>.</div>
           </label>
           <input
             type="text"
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-[#c51f27] focus:ring-1 focus:ring-[#c51f27]"
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#c51f27] focus:ring-1 focus:ring-[#c51f27] text-sm"
             placeholder="Ví dụ: 26123456, 26012345, 25201234"
             value={studentId}
             onChange={(e) => setStudentId(e.target.value)}
           />
         </div>
 
-        <h3 className="text-[22px] font-bold mb-4 text-black">Hướng dẫn chụp ảnh</h3>
-
-        <div className="mb-6 rounded-lg overflow-hidden border border-gray-200">
-          <img src="https://hoangmaistarschool.edu.vn/thongtin/dkfaceid.png" alt="Hướng dẫn chụp ảnh" className="w-full h-auto object-contain bg-gray-50" />
+        <div className="mb-4">
+          <h3 className="font-bold text-black text-[16px] mb-2">Hướng dẫn chụp ảnh</h3>
+          
+          <div className="mb-2 rounded-lg overflow-hidden border border-gray-200">
+            <img src="https://hoangmaistarschool.edu.vn/thongtin/dkfaceid.png" alt="Hướng dẫn chụp ảnh" className="w-full h-auto object-contain bg-gray-50" />
+          </div>
+          <div className="text-gray-800 text-[13px] space-y-1 font-medium">
+            <p>- Kích thước tối thiểu 720x1280px</p>
+            <p>- Định dạng: JPG, JPEG, PNG</p>
+          </div>
         </div>
 
-        <div className="text-gray-800 text-[16px] space-y-1.5 mb-8 font-medium">
-          <p>- Kích thước tối thiểu 720x1280px</p>
-          <p>- Định dạng: JPG, JPEG, PNG</p>
-        </div>
-
-        {uploadStatus && (
-          <div className={`p-4 mb-6 rounded-lg text-sm font-medium ${uploadStatus.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'}`}>
+        {uploadStatus && uploadStatus.type === 'error' && (
+          <div className="p-3 mb-4 rounded-lg text-sm font-medium bg-red-50 text-red-800 border border-red-200">
             {uploadStatus.message}
           </div>
         )}
 
         <button 
-          className={`w-full text-white py-3.5 rounded-[14px] font-bold text-[17px] transition-colors shadow-sm ${!file || uploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#c51f27] hover:bg-red-800'}`}
+          className={`w-full text-white py-3 rounded-xl font-bold text-[16px] transition-colors shadow-sm ${!file || uploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#c51f27] hover:bg-red-800'}`}
           onClick={handleUpload}
           disabled={!file || uploading}
         >
           {uploading ? 'Đang tải lên...' : 'Tải ảnh lên'}
         </button>
       </div>
+
+      {/* Success Popup */}
+      {uploadStatus && uploadStatus.type === 'success' && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm text-center shadow-xl animate-in fade-in zoom-in duration-200">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Thành công!</h3>
+            <p className="text-gray-600 mb-6 font-medium">Ba/Mẹ đã đăng ký thành công!</p>
+            <button 
+              className="w-full bg-[#c51f27] text-white py-2.5 rounded-xl font-bold hover:bg-red-800 transition-colors"
+              onClick={() => {
+                setUploadStatus(null);
+                setStudentId('');
+              }}
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
